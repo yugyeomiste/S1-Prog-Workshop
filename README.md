@@ -1,1 +1,1 @@
-# Workshop Prog&Algor
+# Workshop Prog&Algo
