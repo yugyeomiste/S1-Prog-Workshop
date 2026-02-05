@@ -64,9 +64,34 @@ void degrade(sil::Image& image)
     }
 }
 
-//niveau 2 j3
+//exo6 cercle
+void cercle(sil::Image& image)
+{
+    int centre_x = image.width() / 2;
+    int centre_y = image.height() / 2;
+    int rayon = 100;
+    int epaisseur = 5;
 
-//exo6 miroir
+    for (int x = 0; x < image.width(); x++)
+    {
+        for (int y = 0; y < image.height(); y++)
+        {
+            // j'utilise racine carrée pour avoir la distance réelle
+            float distance = std::sqrt(std::pow(x - centre_x, 2) + std::pow(y - centre_y, 2));
+
+            if (std::abs(distance - rayon) < epaisseur)
+            {
+                image.pixel(x, y) = glm::vec3{1.f};
+            }
+        }
+    }
+}
+
+
+
+//niveau 2 
+
+//exo1 miroir
 void miror(sil::Image& image)
 {
     // test jusqu'a la moité 
@@ -80,7 +105,7 @@ void miror(sil::Image& image)
     }
 }
 
-//ex07 rotation a 90 
+//exo2 rotation a 90 
 
 void rotation(sil::Image& image)
 {
@@ -98,7 +123,7 @@ void rotation(sil::Image& image)
     // remplace l'image de base avec nouvelle
     image = nouvelle_image;
 }
- //exo 8 luminosité
+ //exo3 luminosité
 
 void luminosite(sil::Image& image)
 {
@@ -111,9 +136,40 @@ void luminosite(sil::Image& image)
     }
 }
 
+//exo4  disque 
+
+void disque(sil::Image& image)
+{
+    // on se met au milieu de l'image
+    int centre_x = image.width() / 2;
+    int centre_y = image.height() / 2;
+    int rayon = 100;
+
+    for (int x = 0; x < image.width(); x++)
+    {
+        for (int y = 0; y < image.height(); y++)
+        {
+            // equation du cercle : (x-a)² + (y-b)² <= R²
+            // calcule distance au carré par rapport au centre
+            int distance_sq = std::pow(x - centre_x, 2) + std::pow(y - centre_y, 2);
+            
+            if (distance_sq <= std::pow(rayon, 2))
+            {
+                //blanc
+                image.pixel(x, y) = glm::vec3{1.f};
+            }
+        }
+    }
+}
+
+//exo 5 animation
+
+
+
+
 // niveau 3 
 
-//ex0 9 glitch 
+//exo1 glitch 
 
 void glitch(sil::Image& image)
 {
@@ -141,6 +197,8 @@ void glitch(sil::Image& image)
         }
     }
 }
+
+//exo 2 rosace 
 
 int main()
 {
@@ -192,4 +250,15 @@ int main()
         luminosite(image);
         image.save("output/luminosite.png");
     }
+    {
+        sil::Image image{500, 500};
+        disque(image);
+        image.save("output/disque.png");
+    }
+     {
+        sil::Image image{500, 500};
+        cercle(image);
+        image.save("output/cercle.png");
+    }
+
 }
