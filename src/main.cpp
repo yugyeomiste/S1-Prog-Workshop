@@ -200,6 +200,52 @@ void glitch(sil::Image& image)
 
 //exo 2 rosace 
 
+void rosace(sil::Image& image)
+{
+    for (glm::vec3& color : image.pixels()) 
+    {
+        color = glm::vec3{0.f};
+    }
+
+    int rayon = 100;
+    int epaisseur = 3; 
+    int centre_x = image.width() / 2;
+    int centre_y = image.height() / 2;
+
+    for (int x = 0; x < image.width(); x++)
+    {
+        for (int y = 0; y < image.height(); y++)
+        {
+
+            // Calcul de la distance du pixel au centre
+            float distance = std::sqrt(std::pow(x - centre_x, 2) + std::pow(y - centre_y, 2));
+            
+            // Si  distance = rayon --> blanc
+            if (std::abs(distance - rayon) < epaisseur)
+            {
+                image.pixel(x, y) = glm::vec3{1.f};
+            }
+
+            // 6 cercles
+            for (int i = 0; i < 6; i++)
+            {
+                // position du cercle au centre
+                float angle = i * (M_PI / 3.0f);  
+                int cx = centre_x + rayon * std::cos(angle);
+                int cy = centre_y + rayon * std::sin(angle);
+
+                // si le pixel appartient au contour de ce cercle
+                float dist_cercle = std::sqrt(std::pow(x - cx, 2) + std::pow(y - cy, 2));
+                
+                if (std::abs(dist_cercle - rayon) < epaisseur)
+                {
+                    image.pixel(x, y) = glm::vec3{1.f}; 
+                }
+            }
+        }
+    }
+}
+
 int main()
 {
 
@@ -255,10 +301,15 @@ int main()
         disque(image);
         image.save("output/disque.png");
     }
-     {
+    {
         sil::Image image{500, 500};
         cercle(image);
         image.save("output/cercle.png");
+    }
+    {
+        sil::Image image{500, 500};
+        rosace(image);
+        image.save("output/rosace.png");
     }
 
 }
