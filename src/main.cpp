@@ -98,6 +98,22 @@ void rotation(sil::Image& image)
     // remplace l'image de base avec nouvelle
     image = nouvelle_image;
 }
+ //exo 8 luminosité
+
+void luminosite(sil::Image& image)
+{
+    for (glm::vec3& color : image.pixels())
+    {
+        //  Puissance 0.5 (racine carree) pour eclaircir
+        color.r = std::pow(color.r, 0.5f);
+        color.g = std::pow(color.g, 0.5f);
+        color.b = std::pow(color.b, 0.5f);
+    }
+}
+
+// niveau 3 
+
+//ex0 9 glitch 
 
 void glitch(sil::Image& image)
 {
@@ -170,5 +186,10 @@ int main()
         sil::Image image{"images/logo.png"}; 
         glitch(image); 
         image.save("output/glitch.png"); 
+    }
+    {
+        sil::Image image{"images/photo.jpg"}; 
+        luminosite(image);
+        image.save("output/luminosite.png");
     }
 }
