@@ -2,6 +2,8 @@
 #include <iostream>
 #include <algorithm>
 
+//niveau 1 j1&2
+
 //exo1
 
 void keep_green_only(sil::Image& image)
@@ -47,6 +49,35 @@ void negatif(sil::Image& image)
     }
 }
 
+//exo5 degrade
+void degrade(sil::Image& image)
+{
+    for (int x = 0; x < image.width(); x++)
+    {
+        for (int y = 0; y < image.height(); y++)
+        {
+            float value = x / (float)(image.width() - 1);
+            image.pixel(x, y) = glm::vec3{value};
+        }
+    }
+}
+
+//niveau 2 j3
+
+//exo6 miroir
+void miror(sil::Image& image)
+{
+    // test jusqu'a la moité
+    for (int x = 0; x < image.width() / 2; x++)
+    {
+        for (int y = 0; y < image.height(); y++)
+        {
+            int x_oppose = image.width() - 1 - x;
+            std::swap(image.pixel(x, y), image.pixel(x_oppose, y));
+        }
+    }
+}
+
 int main()
 {
     {
@@ -68,5 +99,15 @@ int main()
         sil::Image image{"images/logo.png"}; 
         negatif(image); 
         image.save("output/negatif.png"); 
+    }
+    {
+        sil::Image image{300/*width*/, 200/*height*/}; //indice
+        degrade(image);
+        image.save("output/degrade.png");
+    }
+    {
+        sil::Image image{"images/logo.png"}; 
+        miror(image); 
+        image.save("output/miroir.png"); 
     }
 }
