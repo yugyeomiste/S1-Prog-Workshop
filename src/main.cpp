@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include "random.hpp"
+#include <complex>
 
 //niveau 1 j1&2
 
@@ -162,7 +163,26 @@ void disque(sil::Image& image)
     }
 }
 
-//exo 5 animation
+//exo 5 mosaique
+
+void mosaique(sil::Image& image)
+{
+    sil::Image nouvelle_image{image.width(), image.height()};
+    
+    int repetitions = 5; 
+
+    for (int x = 0; x < image.width(); x++)
+    {
+        for (int y = 0; y < image.height(); y++)
+        {
+            int x_source = (x * repetitions) % image.width();
+            int y_source = (y * repetitions) % image.height();
+            
+            nouvelle_image.pixel(x, y) = image.pixel(x_source, y_source);
+        }
+    }
+    image = nouvelle_image;
+}
 
 
 
@@ -246,6 +266,39 @@ void rosace(sil::Image& image)
     }
 }
 
+//exo3 mandelbrot 
+
+void mandelbrot(sil::Image& image)
+{
+    // on parcourt toute l'image
+    for (int x = 0; x < image.width(); x++)
+    {
+        for (int y = 0; y < image.height(); y++)
+        {
+            // il faut changer l'echelle de x et y
+            // -2 a 2 pour bien voir la fractale
+            float new_x = ((float)x / image.width() - 0.5f) * 4.f;
+            float new_y = ((float)y / image.height() - 0.5f) * 4.f;
+
+            // on definit les nombres complexes c et z
+            std::complex<float> c{new_x, new_y};
+            std::complex<float> z{0.f, 0.f}; 
+
+            int compteur = 0;
+
+            // calcul z = z * z + c et on s'arrete si z > 2 ou si 50 tours
+            while (std::abs(z) < 2.f && compteur < 50)
+            {
+                z = z * z + c;
+                compteur++;
+            }
+
+            float couleur = (float)compteur / 50.f;
+            image.pixel(x, y) = glm::vec3{couleur};
+        }
+    }
+}
+
 int main()
 {
 
@@ -310,6 +363,16 @@ int main()
         sil::Image image{500, 500};
         rosace(image);
         image.save("output/rosace.png");
+    }
+    {
+        sil::Image image{"images/logo.png"}; 
+        mosaique(image);
+        image.save("output/mosaique.png");
+    }
+    {
+        sil::Image image{500, 500};
+        mandelbrot(image);
+        image.save("output/mandelbrot.png");
     }
 
 }
