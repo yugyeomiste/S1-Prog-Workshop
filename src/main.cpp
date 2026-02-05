@@ -1,6 +1,7 @@
 #include <sil/sil.hpp>
 #include <iostream>
 #include <algorithm>
+#include "random.hpp"
 
 //niveau 1 j1&2
 
@@ -13,7 +14,6 @@ void keep_green_only(sil::Image& image)
         color.r = 0.f;
         color.b = 0.f;
     }
-    image.save("output/keep_green_only.png");
 }
 
 //exo2
@@ -33,6 +33,7 @@ void noir_et_blanc(sil::Image& image)
 {
     for (glm::vec3& color : image.pixels())
     {
+        // moyenne des 3 couleurs pour le gris
         float moyenne = (color.r + color.g + color.b) / 3.f;
 
         color = glm::vec3{moyenne}; 
@@ -43,6 +44,7 @@ void noir_et_blanc(sil::Image& image)
 
 void negatif(sil::Image& image)
 {
+    // inversement des couleurs (1 - couleur)
     for (glm::vec3& color : image.pixels())
     {
         color = glm::vec3{1.f} - color;
@@ -67,7 +69,7 @@ void degrade(sil::Image& image)
 //exo6 miroir
 void miror(sil::Image& image)
 {
-    // test jusqu'a la moité
+    // test jusqu'a la moité 
     for (int x = 0; x < image.width() / 2; x++)
     {
         for (int y = 0; y < image.height(); y++)
@@ -78,8 +80,57 @@ void miror(sil::Image& image)
     }
 }
 
+//ex07 rotation a 90 
+
+void rotation(sil::Image& image)
+{
+    // creation d'un nouvelle image 
+    sil::Image nouvelle_image{image.height(), image.width()};
+
+    for (int x = 0; x < image.width(); x++)
+    {
+        for (int y = 0; y < image.height(); y++)
+        {
+            // formule pour tourner a 90 
+            nouvelle_image.pixel(image.height() - 1 - y, x) = image.pixel(x, y);
+        }
+    }
+    // remplace l'image de base avec nouvelle
+    image = nouvelle_image;
+}
+
+void glitch(sil::Image& image)
+{
+    for (int i = 0; i < 100; i++)
+    {
+        // random taille du rectangle 
+        int largeur_rect = random_int(10, 40);
+        int hauteur_rect = random_int(2, 10);
+
+        // coordonnees de depart
+        int x1 = random_int(0, image.width() - 1 - largeur_rect);
+        int y1 = random_int(0, image.height() - 1 - hauteur_rect);
+
+        // coordonnees d'arrivee
+        int x2 = random_int(0, image.width() - 1 - largeur_rect);
+        int y2 = random_int(0, image.height() - 1 - hauteur_rect);
+
+        for (int x = 0; x < largeur_rect; x++)
+        {
+            for (int y = 0; y < hauteur_rect; y++)
+            {
+                // Echange du pixel 1 et pixel 2
+                std::swap(image.pixel(x1 + x, y1 + y), image.pixel(x2 + x, y2 + y));
+            }
+        }
+    }
+}
+
 int main()
 {
+
+    set_random_seed(0);
+
     {
         sil::Image image{"images/logo.png"}; 
         keep_green_only(image); 
@@ -109,5 +160,15 @@ int main()
         sil::Image image{"images/logo.png"}; 
         miror(image); 
         image.save("output/miroir.png"); 
+    }
+    {
+        sil::Image image{"images/logo.png"}; 
+        rotation(image); 
+        image.save("output/rotation.png"); 
+    }
+    {
+        sil::Image image{"images/logo.png"}; 
+        glitch(image); 
+        image.save("output/glitch.png"); 
     }
 }
