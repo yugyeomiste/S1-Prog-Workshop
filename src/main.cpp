@@ -184,6 +184,23 @@ void mosaique(sil::Image& image)
     image = nouvelle_image;
 }
 
+//exo6 image bruité
+void noise(sil::Image& image)
+{
+    // on parcourt tous les pixels
+    for (int x = 0; x < image.width(); x++)
+    {
+        for (int y = 0; y < image.height(); y++)
+        {
+            // random_float pour avoir un chiffre entre 0 et 1
+            if (random_float(0, 1) < 0.3f) 
+            {
+                image.pixel(x, y) = glm::vec3{random_float(0, 1), random_float(0, 1), random_float(0, 1)};
+            }
+        }
+    }
+}
+
 
 
 
@@ -299,6 +316,40 @@ void mandelbrot(sil::Image& image)
     }
 }
 
+//exo4 mosaique miroir 
+
+void mosaique_miroir(sil::Image& image)
+{
+    sil::Image nouvelle_image{image.width(), image.height()};
+    int repetitions = 5;
+
+    for (int x = 0; x < image.width(); x++)
+    {
+        for (int y = 0; y < image.height(); y++)
+        {
+            //calcul dans quelle case de la grille on est
+            int case_x = x / (image.width() / repetitions);
+            int case_y = y / (image.height() / repetitions);
+
+            int x_source = (x * repetitions) % image.width();
+            int y_source = (y * repetitions) % image.height();
+
+            // si case est impaire on inverse 
+            if (case_x % 2 == 1) 
+            {
+                x_source = image.width() - 1 - x_source;
+            }
+            if (case_y % 2 == 1)
+            {
+                y_source = image.height() - 1 - y_source;
+            }
+
+            nouvelle_image.pixel(x, y) = image.pixel(x_source, y_source);
+        }
+    }
+    image = nouvelle_image;
+}
+
 int main()
 {
 
@@ -368,6 +419,16 @@ int main()
         sil::Image image{"images/logo.png"}; 
         mosaique(image);
         image.save("output/mosaique.png");
+    }
+    {
+        sil::Image image{"images/logo.png"}; 
+        mosaique_miroir(image);
+        image.save("output/mosaique_miroir.png");
+    }
+       {
+        sil::Image image{"images/logo.png"}; 
+        noise(image);
+        image.save("output/noise.png");
     }
     {
         sil::Image image{500, 500};

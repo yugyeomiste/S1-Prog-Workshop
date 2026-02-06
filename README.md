@@ -87,6 +87,14 @@ L'opérateur modulo `%` permet de revenir à 0 automatiquement dès qu'on dépas
 
 ## Niveau 3 : Exercices avancés
 
+### ⭐⭐⭐ Mosaïque Miroir
+J'utilise le modulo `%` pour répéter l'image.
+Pour la version miroir j'ai inversé les coordonnées d'une case sur deux.
+
+| Mosaïque | Mosaïque Miroir |
+|:---:|:---:|
+| ![](output/mosaique.png) | ![](output/mosaique_miroir.png) |
+
 ### ⭐⭐⭐ Glitch
 Cet effet glitch est le resultat d'echange de rectangle aléatoires dans l'image.
 J'ai utilisé `#include "random.hpp"` pour générer des positions random et j'ai répété l'action 100 fois.
